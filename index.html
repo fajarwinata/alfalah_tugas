@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="DataTables/datatables.min.css" />
+    <title>Contoh</title>
+    <style>
+        #simpan{
+            padding: 10px; 
+            width:100%; 
+            background: linear-gradient( #0d5852,  #139a8f );
+            border-radius: 10px;
+            color: #fff;
+            border-width: 0px;
+        }
+        #simpan:hover{
+            color:#fff;
+            background: linear-gradient( #022f2b,  #025750 );
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="id" autocomplete="off">
+    <table style="padding:10px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:10px" width="50%" align="center">
+        <tr>
+            <td colspan="4" align="center"><h3>Input Data Ke tabel</h3></td>
+        </tr>
+        <tr>
+            <td>Nama</td>
+            <td><input style="width:90%; padding:5px;border-radius:10px" type="text" name="nama" placeholder="Masukan nama" /></td> 
+            <td>Kelas</td>
+            <td><input style="width:90%; padding:5px;border-radius:10px" type="text" name="kelas" placeholder="Masukan kelas" /></td> 
+        </tr>
+        <tr>
+            <td>Alamat</td>
+            <td><input style="width:90%; padding:5px;border-radius:10px" type="text" name="alamat" placeholder="Masukan Alamat" /></td>
+            <td>Nomor Handphone</td>
+            <td><input style="width:90%; padding:5px;border-radius:10px" type="text" name="hp" placeholder="Masukan nomor hp" /></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button id="simpan">Simpan Data</button></td>
+            <td colspan="2" align="center"><button id="hapus" style="display:none; padding:10px; background-color: red;color:white">Hapus Data</button></td>
+        </tr>
+    </table>
+    
+    
+    
+    
+
+
+    <table id="table" class="display">
+        <thead>
+            <tr>
+                <td width="10%">No</td>
+                <td width="25%">Nama</td>
+                <td width="15%">Kelas</td>
+                <td width="30%">Alamat</td>
+                <td width="20%">No HP</td>
+            </tr>
+        </thead>
+    </table>
+    <script src="DataTables/jQuery-3.6.0/jquery-3.6.0.min.js"></script>
+    <script src="DataTables/datatables.min.js"></script>
+    <script>
+
+        var tabel = $("#table").DataTable({
+                        responsive: true,
+                        select: true
+                    });
+
+            tabel.on('select', function(){
+                $("#id").val(tabel.rows(".selected").data().toArray()[0][0])
+                $("input[name=nama]").val(tabel.rows(".selected").data().toArray()[0][1]);
+                $("input[name=kelas]").val(tabel.rows(".selected").data().toArray()[0][2]);
+                $("input[name=alamat]").val(tabel.rows(".selected").data().toArray()[0][3]);
+                $("input[name=hp]").val(tabel.rows(".selected").data().toArray()[0][4]);
+                $("#simpan").html("Ubah Data");
+                $("#hapus").show();
+            });
+
+            tabel.on('deselect', function(){
+                $("#simpan").html("Simpan Data");
+                $("input[name=nama]").val(null);
+                $("input[name=kelas]").val(null);
+                $("input[name=alamat]").val(null);
+                $("input[name=hp]").val(null);
+                $("#id").val(null);
+                $("#hapus").hide();
+            });
+        var no = 1;
+        $("#simpan").click(function(){
+            var nama    = $("input[name=nama]").val();
+            var kelas   = $("input[name=kelas]").val();
+            var alamat  = $("input[name=alamat]").val();
+            var hp      = $("input[name=hp]").val();
+            var id      = $("#id").val();
+            
+            if(id.length > 0){
+                tabel.row(id-1).data(
+                    [id,nama,kelas,alamat,hp]
+                ).draw();
+            } else{
+                tabel.row.add(
+                    [ no,nama,kelas,alamat,hp ]
+                ).draw(false);
+                no++;
+            }
+            $("#simpan").html("Simpan Data");
+            $("input[name=nama]").val(null);
+            $("input[name=kelas]").val(null);
+            $("input[name=alamat]").val(null);
+            $("input[name=hp]").val(null);
+            $("#id").val(null);
+            $("#hapus").hide();
+        });   
+    </script>
+</body>
+</html>
